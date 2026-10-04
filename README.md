@@ -14,7 +14,7 @@ Tích hợp toàn bộ module tấn công không dây: WiFi · Bluetooth · Infr
 - **Deauth by Channel** — Chọn kênh 1–13 → broadcast deauth trên kênh đó
 - **Storm Mode** — Tự động bùng phát khi phát hiện hiệu quả
 - **Multi-AP Mesh** — Hỗ trợ AP có nhiều BSSID cùng SSID
-- **Multi-Band** — 2.4 GHz
+- **Multi-Band** — 2.4 GHz / 5 GHz / 6 GHz
 - **Beacon Spam** — Tạo hàng loạt AP giả mạo
 - **WiFi Scan** — Quét mạng lân cận
 
