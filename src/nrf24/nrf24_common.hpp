@@ -16,8 +16,16 @@
  */
 
 #include <Arduino.h>
-#include <RF24.h>
 #include <SPI.h>
+
+// ir_codes.hpp dinh nghia: #define NOP __asm__ __volatile__ ("nop")
+// RF24/nRF24L01.h dinh nghia: constexpr uint8_t NOP = 0xFF;
+// → Phai undef NOP truoc khi include RF24 de tranh xung dot
+#ifdef NOP
+#undef NOP
+#endif
+#include <RF24.h>
+
 #include "../global.hpp"
 #include "../display_utils.h"
 
