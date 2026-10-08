@@ -332,20 +332,21 @@ static void PhUI_Splash(uint32_t ms = 2000)
     display.drawRoundRect(1, 1, PH_W - 2, PH_H - 2, 4, WHITE);
 
     // Ten project
+    // setTextSize(2): moi ky tu rong 12px, "C3-Phantom" = 10 ky tu = 120px
+    // Man hinh 128px → cursor x = (128-120)/2 = 4 → vua khit
     display.setTextSize(2);
     display.setTextColor(WHITE);
-    int tw = 9 * 12; // "C3-Phantom" = 10 ky tu * 12px
-    display.setCursor((PH_W - tw) / 2, 10);
+    display.setCursor(4, 10);
     display.print("C3-Phantom");
 
     // Dong chu nho
     display.setTextSize(1);
     display.setCursor(22, 34);
-    display.print("QUOC BAO DIY");
+    display.print("Cong cu bao mat RF");
 
     // Version
     display.setCursor(40, 48);
-    display.print("v3.0  ESP32-C3");
+    display.print("v1.0  ESP32-C3");
 
     display.display();
     delay(ms);

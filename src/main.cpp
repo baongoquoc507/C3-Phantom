@@ -22,7 +22,6 @@
 
 #include "nrf24/nrf24_menu.hpp"
 
-#include "headless.h"
 #include "settings.h"
 
 #include "soc/soc.h"
@@ -58,9 +57,8 @@ void setup()
     WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);
     Serial.begin(115200);
 
-    bool display_ok = display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
-    if (!display_ok)
-        Serial.println("[UI] SSD1306 khong tim thay, chay headless...");
+    if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C))
+        Serial.println("[UI] Khong tim thay SSD1306!");
 
     // Pin setup
     pinMode(IR_TX,         OUTPUT);
@@ -89,11 +87,6 @@ void setup()
             delay(100);
         }
     }
-
-    if (!display_ok) { Headless_Setup(); return; }
-
-    auto cfg = ReadConfig("/config.cfg");
-    if (cfg["headless"] == "1") { Headless_Setup(); return; }
 
     // ── Splash screen ──────────────────────────────────────
     PhUI_Splash(2000);
@@ -149,14 +142,6 @@ void setup()
     //  MENU CAI DAT
     // ============================================================
     menu_caidat.heading_override = "Cai Dat";
-    menu_caidat.AddItem(MenuItem("Che Do An", []() {
-        auto cfg = ReadConfig("/config.cfg");
-        bool cur  = (cfg["headless"] == "1");
-        cfg["headless"] = cur ? "0" : "1";
-        WriteConfig("/config.cfg", cfg);
-        PhUI_Notify(cur ? "Da tat che do an" : "Da bat che do an", 800);
-        ESP.restart();
-    }));
     menu_caidat.AddItem(MenuItem("Khoi Dong Lai", []() {
         if (PhUI_Confirm("Xac Nhan", "Khoi dong lai?")) ESP.restart();
     }));
