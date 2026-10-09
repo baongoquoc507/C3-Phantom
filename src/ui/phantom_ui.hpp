@@ -342,11 +342,11 @@ static void PhUI_Splash(uint32_t ms = 2000)
     // Dong chu nho
     display.setTextSize(1);
     display.setCursor(22, 34);
-    display.print("QUOC BAO DIY");
+    display.print("Cong cu bao mat RF");
 
     // Version
     display.setCursor(40, 48);
-    display.print("v4.0  ESP32-C3");
+    display.print("v1.0  ESP32-C3");
 
     display.display();
     delay(ms);

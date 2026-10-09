@@ -110,7 +110,7 @@ void setup()
     // ============================================================
     menu_bluetooth.heading_override = "Bluetooth";
     menu_bluetooth.AddItem(MenuItem("Quet Thiet Bi",  BLE_Scan));
-    menu_bluetooth.AddItem(MenuItem("Spam Ket Noi",   BLE_Spam));
+    menu_bluetooth.AddItem(MenuItem("Spam BLE",  BLE_Spam));
 
     // ============================================================
     //  MENU HONG NGOAI
