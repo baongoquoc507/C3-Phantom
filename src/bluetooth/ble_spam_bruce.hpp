@@ -143,7 +143,7 @@ enum BleMacMode { BMM_OFF=0,BMM_EVERY,BMM_2,BMM_5,BMM_10,BMM_25,BMM_COUNT };
 static const char* BMM_LABELS[] = {"Tat","Moi goi","Moi 2","Moi 5","Moi 10","Moi 25"};
 
 struct BleSpamCfg { uint32_t adv_ms=5; uint32_t gap_ms=5;
-                    BleTxPwr tx=BTP_MAX; BleMacMode mac_mode=BMM_EVERY; };
+                    BleTxPwr tx=BTP_MAX; BleMacMode mac_mode=BMM_OFF; };
 static BleSpamCfg ble_cfg;
 
 static void BleSpam_LoadCfg() {
@@ -190,13 +190,16 @@ static void ApplyTxPwr(BleTxPwr t){ esp_ble_tx_power_set(ESP_BLE_PWR_TYPE_ADV,Tx
 static BLEAdvertising* pBrAdv = nullptr;
 
 static void RotateMac(const uint8_t* mac) {
+    if (!btStarted()) return;
     if (pBrAdv) pBrAdv->stop();
-    // Bluedroid: đặt random address qua GAP
+    delay(5);
+    // Bluedroid: MAC little-endian (byte 5 -> 0)
     uint8_t addr[6];
-    memcpy(addr, mac, 6);
-    addr[5] |= 0xC0;  // random static address: 2 bit cao = 11
+    addr[0] = mac[5] | 0xC0;  // bit cao = 11 (random static)
+    addr[1] = mac[4]; addr[2] = mac[3];
+    addr[3] = mac[2]; addr[4] = mac[1]; addr[5] = mac[0];
     esp_ble_gap_set_rand_addr(addr);
-    delay(3);
+    delay(5);
 }
 
 // ================================================================
@@ -298,11 +301,28 @@ static bool BuildBeacon(const char* name, BLEAdvertisementData& d) {
 static void BleSpam_RunLoop(BleSpamType type, int dev_idx=0,
                              const char* extra_name=nullptr)
 {
-    BLEDevice::init("");
-    delay(10);
+    // Kiem tra RAM truoc khi khoi dong BLE
+    if (ESP.getFreeHeap() < 40000) {
+        PhUI_Notify("Khong du RAM!
+(" + String(ESP.getFreeHeap()/1024) + "KB con lai)", 2000);
+        return;
+    }
+
+    // Khoi dong BLE an toan - chi init neu chua chay
+    if (!btStarted()) {
+        BLEDevice::init("");
+        delay(150);
+    }
+
     ApplyTxPwr(ble_cfg.tx);
     pBrAdv = BLEDevice::getAdvertising();
-    if (pBrAdv) { pBrAdv->setMinInterval(0x20); pBrAdv->setMaxInterval(0x30); }
+    if (!pBrAdv) {
+        PhUI_Notify("Loi BLE
+khong lay duoc Adv", 2000);
+        return;
+    }
+    pBrAdv->setMinInterval(0x20);
+    pBrAdv->setMaxInterval(0x30);
     RngSeed();
 
     PhUI_Status(BST_NAMES[type],"Dang chuan bi...",nullptr,nullptr,"CTR=Dung");
@@ -410,8 +430,12 @@ static void BleSpam_RunLoop(BleSpamType type, int dev_idx=0,
     }
 
     HaltTillRelease(BUTTON_CENTER);
+
+    // Chi stop quang cao, KHONG deinit BLE
+    // (tranh crash neu scan() hoac spam chay lai ngay sau)
     if(pBrAdv){ pBrAdv->stop(); pBrAdv=nullptr; }
-    BLEDevice::deinit();
+    delay(50);
+
     PhUI_Result(BST_NAMES[type],pkt_total,"Goi da gui",true);
 }
 
