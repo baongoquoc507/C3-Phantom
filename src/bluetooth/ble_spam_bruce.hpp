@@ -303,8 +303,9 @@ static void BleSpam_RunLoop(BleSpamType type, int dev_idx=0,
 {
     // Kiem tra RAM truoc khi khoi dong BLE
     if (ESP.getFreeHeap() < 40000) {
-        PhUI_Notify("Khong du RAM!
-(" + String(ESP.getFreeHeap()/1024) + "KB con lai)", 2000);
+        char _ram_msg[32];
+        snprintf(_ram_msg, 32, "Khong du RAM! (%dKB)", (int)(ESP.getFreeHeap()/1024));
+        PhUI_Notify(_ram_msg, 2000);
         return;
     }
 
@@ -317,8 +318,7 @@ static void BleSpam_RunLoop(BleSpamType type, int dev_idx=0,
     ApplyTxPwr(ble_cfg.tx);
     pBrAdv = BLEDevice::getAdvertising();
     if (!pBrAdv) {
-        PhUI_Notify("Loi BLE
-khong lay duoc Adv", 2000);
+        PhUI_Notify("Loi BLE! Khong lay duoc Adv", 2000);
         return;
     }
     pBrAdv->setMinInterval(0x20);
