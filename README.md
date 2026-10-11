@@ -34,6 +34,20 @@ Tích hợp toàn bộ module tấn công không dây: WiFi · Bluetooth · Infr
 - **RF Identifier** — Nhận dạng giao thức RF
 - **Tesla Charge Port** — Mở cổng sạc Tesla
 
+### 🎮 Mini Games *(MỚI)*
+- **Xếp Gạch (Tetris)** — Game tetris đầy đủ trên OLED 128×64, 7 loại khối, ghost piece, tăng tốc theo level
+- **Khủng Long Nhảy (Dino Runner)** — Né xương rồng và chim, nhảy đôi, cua xuống, hi-score lưu phiên
+
+> **Điều khiển chỉ bằng 3 nút:**
+>
+> | Nút | Tetris | Dino Runner |
+> |---|---|---|
+> | **LEFT** | Xoay khối / giữ = di trái | Cúi (duck) / tap = thoát |
+> | **CENTER** | Tap = Hard Drop / giữ = di trái | Nhảy (jump) |
+> | **RIGHT** | Di chuyển phải | Nhảy đôi (double jump) |
+
+---
+
 ### 📡 NRF24 2.4GHz *(MỚI)*
 - **Spectrum Analyzer** — Phân tích phổ 2.4GHz theo thời gian thực (80 kênh, hiển thị bar chart trên OLED)
 - **Jammer** — Gây nhiễu 2.4GHz với 10 chế độ:
@@ -192,6 +206,9 @@ C3-Phantom
 │   │   ├── Scan Devices
 │   │   └── Attack Target
 │   └── Jammer Mode List
+├── Mini Games ★ MỚI
+│   ├── Xep Gach  (Tetris)
+│   └── Khung Long (Dino Runner)
 └── Settings
     └── Headless Mode
 ```
@@ -255,6 +272,10 @@ C3-Phantom/
 │   │   ├── nrf24_jammer.hpp
 │   │   ├── nrf24_mousejack.hpp
 │   │   └── nrf24_menu.hpp
+│   ├── games/              ← Mini Games (MỚI)
+│   │   ├── tetris.hpp
+│   │   ├── dino.hpp
+│   │   └── games_menu.hpp
 │   ├── wifi/
 │   │   ├── deauth_bruce.hpp  ← Bruce deauth engine
 │   │   ├── scan.hpp

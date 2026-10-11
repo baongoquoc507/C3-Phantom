@@ -22,6 +22,8 @@
 
 #include "nrf24/nrf24_menu.hpp"
 
+#include "games/games_menu.hpp"
+
 #include "settings.h"
 
 #include "soc/soc.h"
@@ -29,7 +31,7 @@
 #include <LittleFS.h>
 
 // ============================================================
-//  KHAI BÁO MENU
+//  KHAI BAO MENU
 // ============================================================
 Menu menu;
 
@@ -37,8 +39,6 @@ Menu menu_wifi;
 Menu menu_wifi_deauth;
 
 Menu menu_bluetooth;
-Menu menu_bt_spam;        // << MỚI: submenu Spam Ket Noi
-Menu menu_bt_spam_apple;  // << MỚI: submenu Apple
 
 Menu menu_hongngoi;
 Menu menu_tvbgone;
@@ -48,6 +48,9 @@ Menu menu_radio;
 Menu menu_radio_gui;
 
 Menu menu_caidat;
+
+// ── Games ───────────────────────────────────────────────────
+Menu menu_games;
 
 Menu* active_menu = nullptr;
 
@@ -111,23 +114,8 @@ void setup()
     //  MENU BLUETOOTH
     // ============================================================
     menu_bluetooth.heading_override = "Bluetooth";
-    menu_bluetooth.AddItem(MenuItem("Quet Thiet Bi", BLE_Scan));
-    menu_bluetooth.AddItem(MenuItem("Spam Ket Noi",  &menu_bt_spam));
-
-    // ── Submenu: Apple (dùng chung cho Pairing & Not Yours) ──
-    menu_bt_spam_apple.heading_override = "Apple";
-    menu_bt_spam_apple.AddItem(MenuItem("Pairing Popup",   BLE_Spam_ApplePairing));
-    menu_bt_spam_apple.AddItem(MenuItem("Not Your Device", BLE_Spam_AppleNotYours));
-    menu_bt_spam_apple.AddItem(MenuItem("Action Modal",    BLE_Spam_AppleAction));
-
-    // ── Submenu: Spam Ket Noi ────────────────────────────────
-    menu_bt_spam.heading_override = "Spam Ket Noi";
-    menu_bt_spam.AddItem(MenuItem("Apple",           &menu_bt_spam_apple));
-    menu_bt_spam.AddItem(MenuItem("Android FastPair", BLE_Spam_Android));
-    menu_bt_spam.AddItem(MenuItem("Samsung",          BLE_Spam_Samsung));
-    menu_bt_spam.AddItem(MenuItem("Windows Swift",    BLE_Spam_Windows));
-    menu_bt_spam.AddItem(MenuItem("BLE Beacon",       BLE_Spam_Beacon));
-    menu_bt_spam.AddItem(MenuItem("Tat Ca",           BLE_Spam_All));
+    menu_bluetooth.AddItem(MenuItem("Quet Thiet Bi",  BLE_Scan));
+    menu_bluetooth.AddItem(MenuItem("Spam Ket Noi",   BLE_Spam));
 
     // ============================================================
     //  MENU HONG NGOAI
@@ -139,21 +127,28 @@ void setup()
 
     menu_tvbgone.heading_override = "Tat TV";
     menu_tvbgone.AddItem(MenuItem("Chau Au (EU)", TvbGone_Callback_EU));
-    menu_tvbgone.AddItem(MenuItem("Bac My (NA)",  TvbGone_Callback_NA));
+    menu_tvbgone.AddItem(MenuItem("Bac My (NA)", TvbGone_Callback_NA));
 
     menu_dieukien_xa.heading_override = "Dieu Khien Xa";
-    menu_dieukien_xa.AddItem(MenuItem("Ti vi",     [](){ IR_UniversalRemote(REMOTE_TYPE_TV);        }));
-    menu_dieukien_xa.AddItem(MenuItem("May Chieu", [](){ IR_UniversalRemote(REMOTE_TYPE_PROJECTOR); }));
+    menu_dieukien_xa.AddItem(MenuItem("Ti vi",      [](){ IR_UniversalRemote(REMOTE_TYPE_TV);         }));
+    menu_dieukien_xa.AddItem(MenuItem("May Chieu",  [](){ IR_UniversalRemote(REMOTE_TYPE_PROJECTOR);  }));
 
     // ============================================================
     //  MENU RADIO (CC1101)
     // ============================================================
     menu_radio.heading_override = "Radio (Sub-GHz)";
-    menu_radio.AddItem(MenuItem("Quet RF",      RF_Scan));
-    menu_radio.AddItem(MenuItem("Gui Tin Hieu", RF_Send));
-    menu_radio.AddItem(MenuItem("Gay Nhieu RF", RF_Jammer));
-    menu_radio.AddItem(MenuItem("Nhan Dang GD", RF_Identifier));
-    menu_radio.AddItem(MenuItem("Tesla Sac",    RF_TeslaChargePort));
+    menu_radio.AddItem(MenuItem("Quet RF",         RF_Scan));
+    menu_radio.AddItem(MenuItem("Gui Tin Hieu",    RF_Send));
+    menu_radio.AddItem(MenuItem("Gay Nhieu RF",    RF_Jammer));
+    menu_radio.AddItem(MenuItem("Nhan Dang GD",    RF_Identifier));
+    menu_radio.AddItem(MenuItem("Tesla Sac",       RF_TeslaChargePort));
+
+    // ============================================================
+    //  MENU GAMES
+    // ============================================================
+    menu_games.heading_override = "Mini Games";
+    menu_games.AddItem(MenuItem("Xep Gach",    []() { Game_Tetris(); }));
+    menu_games.AddItem(MenuItem("Khung Long",  []() { Game_Dino();   }));
 
     // ============================================================
     //  MENU CAI DAT
@@ -166,12 +161,13 @@ void setup()
     // ============================================================
     //  MENU CHINH
     // ============================================================
-    menu.AddItem(MenuItem("WiFi",       &menu_wifi));
-    menu.AddItem(MenuItem("Bluetooth",  &menu_bluetooth));
-    menu.AddItem(MenuItem("Hong Ngoai", &menu_hongngoi));
-    menu.AddItem(MenuItem("Radio",      &menu_radio));
-    menu.AddItem(MenuItem("NRF24",      []() { NRF24_Menu(); }));
-    menu.AddItem(MenuItem("Cai Dat",    &menu_caidat));
+    menu.AddItem(MenuItem("WiFi",          &menu_wifi));
+    menu.AddItem(MenuItem("Bluetooth",     &menu_bluetooth));
+    menu.AddItem(MenuItem("Hong Ngoai",    &menu_hongngoi));
+    menu.AddItem(MenuItem("Radio",         &menu_radio));
+    menu.AddItem(MenuItem("NRF24",         []() { NRF24_Menu(); }));
+    menu.AddItem(MenuItem("Mini Games",    &menu_games));
+    menu.AddItem(MenuItem("Cai Dat",       &menu_caidat));
 
     menu.Revive(nullptr);
     active_menu = &menu;
@@ -189,3 +185,4 @@ void loop()
     if (next) active_menu = next;
     active_menu->Render();
 }
+
