@@ -346,7 +346,7 @@ static void PhUI_Splash(uint32_t ms = 2000)
 
     // Version
     display.setCursor(40, 48);
-    display.print("v8.0  ESP32-C3");
+    display.print("v9.0  ESP32-C3");
 
     display.display();
     delay(ms);

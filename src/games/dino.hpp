@@ -20,8 +20,8 @@
 #define DINO_W          12      // chieu rong sprite khung long
 #define DINO_H          13      // chieu cao sprite khung long (dung)
 #define DINO_DUCK_H     8       // chieu cao khi cro
-#define GRAVITY         1.8f    // gia toc roi (pixel/tick^2)
-#define JUMP_VEL       -7.5f    // van toc nhay
+#define GRAVITY         1.2f    // gia toc roi (pixel/tick^2)
+#define JUMP_VEL       -9.5f    // van toc nhay
 #define DOUBLE_JUMP_VEL -5.5f   // van toc nhay doi
 #define GAME_TICK       20      // ms moi frame (50fps)
 #define OBS_MIN_GAP     35      // khoang cach toi thieu giua vat can
