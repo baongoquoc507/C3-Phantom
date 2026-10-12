@@ -19,15 +19,15 @@
 // ── Chim ────────────────────────────────────────────────────
 #define BIRD_X       22       // x co dinh cua chim
 #define BIRD_R       4        // ban kinh hit-box chim (pixel)
-#define GRAVITY_F    0.38f    // gia toc roi (pixel/frame^2)
-#define FLAP_VEL    -3.6f     // van toc vot len khi tap
-#define BIRD_MAX_VEL 5.0f     // gioi han toc do roi
+#define GRAVITY_F    0.26f    // gia toc roi (pixel/frame^2)
+#define FLAP_VEL    -2.8f     // van toc vot len khi tap
+#define BIRD_MAX_VEL 3.5f     // gioi han toc do roi
 
 // ── Ong ─────────────────────────────────────────────────────
 #define PIPE_W       10       // chieu rong ong (pixel)
-#define PIPE_GAP     20       // khoang trong giua 2 ong (pixel)
-#define PIPE_SPEED   1.6f     // toc do cuon ngang (pixel/frame)
-#define PIPE_SPACE   58       // khoang cach giua 2 cap ong
+#define PIPE_GAP     23       // khoang trong giua 2 ong (pixel)
+#define PIPE_SPEED   1.0f     // toc do cuon ngang (pixel/frame)
+#define PIPE_SPACE   65       // khoang cach giua 2 cap ong
 #define NUM_PIPES    3        // so cap ong tren man hinh
 
 // ── Mat dat / tran ──────────────────────────────────────────
@@ -96,19 +96,15 @@ static void FL_Init()
 // ── Va cham ─────────────────────────────────────────────────
 static bool FL_Hit()
 {
-    // Tran / mat dat
-    if (fl.bird_y - BIRD_R <= CEIL_FL)   return true;
+    // Chi chet khi roi xuong dat (khong chet vi tuong/tran)
     if (fl.bird_y + BIRD_R >= GROUND_FL) return true;
 
-    // Ong
+    // Chet khi cham ong
     for (int i = 0; i < NUM_PIPES; i++) {
         float px = fl.pipes[i].x;
-        // Vung x cua ong
         if (BIRD_X + BIRD_R > px && BIRD_X - BIRD_R < px + PIPE_W) {
             int gy = fl.pipes[i].gap_y;
-            // Ong tren: 0 .. gap_y - PIPE_GAP/2
             if (fl.bird_y - BIRD_R < gy - PIPE_GAP / 2) return true;
-            // Ong duoi: gap_y + PIPE_GAP/2 .. GROUND_FL
             if (fl.bird_y + BIRD_R > gy + PIPE_GAP / 2) return true;
         }
     }
@@ -309,6 +305,11 @@ void Game_Flappy()
         fl.bird_vy += GRAVITY_F;
         if (fl.bird_vy > BIRD_MAX_VEL) fl.bird_vy = BIRD_MAX_VEL;
         fl.bird_y  += fl.bird_vy;
+        // Cham tran: nay xuong (khong chet)
+        if (fl.bird_y - BIRD_R < CEIL_FL) {
+            fl.bird_y  = CEIL_FL + BIRD_R;
+            fl.bird_vy = fabsf(fl.bird_vy) * 0.4f;
+        }
 
         // ── Cuon ong ─────────────────────────────────────
         for (int i = 0; i < NUM_PIPES; i++) {
