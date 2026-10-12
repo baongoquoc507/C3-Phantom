@@ -149,6 +149,8 @@ void setup()
     menu_games.heading_override = "Mini Games";
     menu_games.AddItem(MenuItem("Xep Gach",    []() { Game_Tetris(); }));
     menu_games.AddItem(MenuItem("Khung Long",  []() { Game_Dino();   }));
+    menu_games.AddItem(MenuItem("Flappy Bay",  []() { Game_Flappy(); }));
+    menu_games.AddItem(MenuItem("Pha Tuong",   []() { Game_Bricks(); }));
 
     // ============================================================
     //  MENU CAI DAT

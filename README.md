@@ -37,11 +37,13 @@ Tích hợp toàn bộ module tấn công không dây: WiFi · Bluetooth · Infr
 ### 🎮 Mini Games *(MỚI)*
 - **Xếp Gạch (Tetris)** — Game tetris đầy đủ trên OLED 128×64, 7 loại khối, ghost piece, tăng tốc theo level
 - **Khủng Long Nhảy (Dino Runner)** — Né xương rồng và chim, nhảy đôi, cua xuống, hi-score lưu phiên
+- **Flappy Bay** — Chạm để vỗ cánh lách qua ống, độ khó tăng dần, khe hẹp hơn theo điểm
+- **Phá Tường (Bricks/Breakout)** — Bật bóng phá 5 hàng gạch, 5 level, gạch 2 lớp, điều hướng bóng qua thanh
 
 > **Điều khiển chỉ bằng 3 nút:**
 >
 > | Nút | Tetris | Dino Runner |
-> |---|---|---|
+> |---|---|---|---|---|
 > | **LEFT** | Xoay khối / giữ = di trái | Cúi (duck) / tap = thoát |
 > | **CENTER** | Tap = Hard Drop / giữ = di trái | Nhảy (jump) |
 > | **RIGHT** | Di chuyển phải | Nhảy đôi (double jump) |
@@ -83,7 +85,7 @@ Tích hợp toàn bộ module tấn công không dây: WiFi · Bluetooth · Infr
 > Thêm tụ 10–22µF giữa VCC và GND của NRF24 để ổn định điện áp.
 
 | NRF24L01+ | ESP32-C3 | Ghi chú |
-|---|---|---|
+|---|---|---|---|---|
 | VCC | 3.3V *(nguồn ngoài)* | Dùng nguồn riêng |
 | GND | GND | |
 | CE | **GPIO 20** | Chip Enable |
@@ -135,7 +137,7 @@ NRF24L01+          ESP32-C3
 
 ### 3 Nút bấm
 | Nút | ESP32-C3 | Kết nối |
-|---|---|---|
+|---|---|---|---|---|
 | BUTTON_LEFT | GPIO 1 | GPIO → GND |
 | BUTTON_CENTER | GPIO 2 | GPIO → GND |
 | BUTTON_RIGHT | GPIO 3 | GPIO → GND |
@@ -207,8 +209,10 @@ C3-Phantom
 │   │   └── Attack Target
 │   └── Jammer Mode List
 ├── Mini Games ★ MỚI
-│   ├── Xep Gach  (Tetris)
-│   └── Khung Long (Dino Runner)
+│   ├── Xep Gach   (Tetris)
+│   ├── Khung Long (Dino Runner)
+│   ├── Flappy Bay (Flappy Bird)
+│   └── Pha Tuong  (Bricks / Breakout)
 └── Settings
     └── Headless Mode
 ```
@@ -223,7 +227,7 @@ C3-Phantom
 
 ### Thư viện (tự động cài qua platformio.ini)
 | Thư viện | Phiên bản | Dùng cho |
-|---|---|---|
+|---|---|---|---|---|
 | IRremoteESP8266 | ^2.8.6 | Infrared |
 | Adafruit SSD1306 | ^2.5.15 | OLED display |
 | RadioLib | ^7.3.0 | CC1101 RF |
@@ -275,6 +279,8 @@ C3-Phantom/
 │   ├── games/              ← Mini Games (MỚI)
 │   │   ├── tetris.hpp
 │   │   ├── dino.hpp
+│   │   ├── flappy.hpp
+│   │   ├── bricks.hpp
 │   │   └── games_menu.hpp
 │   ├── wifi/
 │   │   ├── deauth_bruce.hpp  ← Bruce deauth engine
