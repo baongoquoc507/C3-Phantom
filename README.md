@@ -1,7 +1,6 @@
 # 👻 C3-Phantom
 
-Thiết bị bảo mật RF đa năng dựa trên **ESP32-C3**, phát triển từ dự án Flipper C3 DIY.  
-Tích hợp toàn bộ module tấn công không dây: WiFi · Bluetooth · Infrared · Sub-GHz RF · NRF24 2.4GHz.
+esp32 c3, Tích hợp toàn bộ module tấn công không dây: WiFi · Bluetooth · Infrared · Sub-GHz RF · NRF24 2.4GHz.
 
 ---
 
